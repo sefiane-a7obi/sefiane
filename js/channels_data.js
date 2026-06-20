@@ -3,66 +3,42 @@
 // Total: 359 channels
 
 const parsedChannels = [
+  {"name": "MBC 1", "cat": "ترفيه", "icon": "ph-sparkle", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-1/15cf99af5de54063fdabfefe66adc075/index.m3u8"},
+  {"name": "MBC Drama", "cat": "ترفيه", "icon": "ph-mask-happy", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-drama/2c28a458e2f3253e678b07ac7d13fe71/index.m3u8"},
+  {"name": "MBC Masr", "cat": "ترفيه", "icon": "ph-pyramid", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr/956eac069c78a35d47245db6cdbb1575/index.m3u8"},
+  {"name": "MBC Masr 2", "cat": "ترفيه", "icon": "ph-pyramid", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr-2/754931856515075b0aabf0e583495c68/index.m3u8"},
+  {"name": "MBC 4", "cat": "ترفيه", "icon": "ph-sparkle", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-4/24f134f1cd63db9346439e96b86ca6ed/index.m3u8"},
+  {"name": "MBC 5", "cat": "ترفيه", "icon": "ph-sparkle", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-5/ee6b000cee0629411b666ab26cb13e9b/index.m3u8"},
+  {"name": "MBC Bollywood", "cat": "أفلام", "icon": "ph-film-strip", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-bollywood/546eb40d7dcf9a209255dd2496903764/index.m3u8"},
+  {"name": "MBC Iraq", "cat": "ترفيه", "icon": "ph-television", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-iraq/e38c44b1b43474e1c39cb5b90203691e/index.m3u8"},
+  {"name": "MBC 3 Kids", "cat": "أطفال", "icon": "ph-baby", "url": "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-3-usa/5d58265a862a476dc7f97694addb5ded/index.m3u8"},
+  {"name": "Rotana Khalijia", "cat": "موسيقى", "icon": "ph-music-notes", "url": "https://shd-amg-fast.edgenextcdn.net/tx029/playlist.m3u8"},
+  {"name": "Aflam أفلام", "cat": "أفلام", "icon": "ph-film-slate", "url": "https://shd-amg-fast.edgenextcdn.net/tx001/playlist.m3u8"},
+  {"name": "Maraya مرايا", "cat": "مسلسلات", "icon": "ph-film-strip", "url": "https://shd-amg-fast.edgenextcdn.net/tx008/playlist.m3u8"},
+  {"name": "Bab Al Hara", "cat": "مسلسلات", "icon": "ph-house", "url": "https://shd-amg-fast.edgenextcdn.net/tx010/playlist.m3u8"},
+  {"name": "CBC مصر", "cat": "ترفيه", "icon": "ph-television", "url": "https://flu.systemnet.tv/CBC/index.m3u8"},
+  {"name": "CBC Drama مصر", "cat": "مسلسلات", "icon": "ph-mask-happy", "url": "https://flu.systemnet.tv/CBCDrama/index.m3u8"},
+  {"name": "CBC Sofra", "cat": "طبخ", "icon": "ph-cooking-pot", "url": "https://flu.systemnet.tv/CBCSofra/index.m3u8"},
+  
+  
+  
+  
+
   {
     "name": "Al Iraqia Sport",
     "cat": "رياضة",
     "icon": "ph-soccer-ball",
     "url": "https://imn-live.esite-lab.com/hls/iraqia-sports-1.m3u8"
   },
-  {
-    "name": "Alkass Five",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/alkass5-p/main.m3u8"
-  },
-  {
-    "name": "Alkass Four",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/alkass4-p/main.m3u8"
-  },
-  {
-    "name": "Alkass One",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/alkass1-p/main.m3u8"
-  },
-  {
-    "name": "Alkass SHOOF",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/shooflive/main.m3u8"
-  },
-  {
-    "name": "Alkass SHOOF 2",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/shooflive2/main.m3u8"
-  },
-  {
-    "name": "Alkass Seven",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/alkass7-p/main.m3u8"
-  },
-  {
-    "name": "Alkass Six",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/alkass6-p/main.m3u8"
-  },
-  {
-    "name": "Alkass Three",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/alkass3-p/main.m3u8"
-  },
-  {
-    "name": "Alkass Two",
-    "cat": "رياضة",
-    "icon": "ph-soccer-ball",
-    "url": "https://liveeu-gcp.alkassdigital.net/alkass2-p/main.m3u8"
-  },
+  
+  
+  
+  
+  
+  
+  
+  
+  
   {
     "name": "Bahrain Sports 1",
     "cat": "رياضة",
