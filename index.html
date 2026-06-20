@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEFIANE VIP TV — بث مباشر</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="js/channels_data.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --c1:#00e1ff;--c2:#bd00ff;--c3:#ff2a5f;
+      --bg:#050505;--surf:#111;--glass:rgba(20,20,20,.75);--gb:rgba(255,255,255,.08);
+      --text:#fff;--dim:#888;--r1:22px;--r2:16px;
+    }
+    html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+    /* Ambient BG */
+    body::before{content:'';position:fixed;inset:0;z-index:-1;
+      background:
+        radial-gradient(circle at 30% 30%,rgba(189,0,255,.07) 0%,transparent 55%),
+        radial-gradient(circle at 80% 70%,rgba(0,225,255,.06) 0%,transparent 50%),
+        radial-gradient(circle at 50% 90%,rgba(255,42,95,.04) 0%,transparent 45%)}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:10px}
+    ::-webkit-scrollbar-thumb:hover{background:var(--c1)}
+
+    /* ── HEADER ── */
+    header{
+      position:fixed;top:0;width:100%;z-index:1000;
+      backdrop-filter:blur(22px) saturate(1.2);
+      background:rgba(5,5,5,.7);
+      border-bottom:1px solid var(--gb);
+      padding:.85rem 3%;
+      display:flex;align-items:center;gap:12px
+    }
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;flex-shrink:0}
+    .brand-icon{
+      width:42px;height:42px;border-radius:12px;
+      background:linear-gradient(135deg,var(--c2),var(--c1));
+      display:flex;align-items:center;justify-content:center;font-size:20px;
+      box-shadow:0 0 18px rgba(0,225,255,.3);
+      animation:glow 2.5s ease-in-out infinite alternate
+    }
+    @keyframes glow{to{box-shadow:0 0 32px rgba(189,0,255,.5)}}
+    .brand-text h1{font-family:'Oswald',sans-serif;font-size:1.55rem;font-weight:700;line-height:1;
+      background:linear-gradient(90deg,#fff 30%,var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .brand-text small{font-size:.65rem;color:var(--c3);font-weight:800;letter-spacing:2.5px}
+
+    .header-right{display:flex;align-items:center;gap:10px;margin-right:auto}
+    .search-wrap{position:relative}
+    .search-wrap i{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--dim);pointer-events:none}
+    .search-wrap input{
+      background:rgba(255,255,255,.05);border:1px solid var(--gb);border-radius:28px;
+      padding:8px 38px 8px 16px;color:#fff;font-family:'Cairo',sans-serif;font-size:.9rem;
+      outline:none;width:230px;transition:.3s
+    }
+    .search-wrap input:focus{border-color:var(--c1);box-shadow:0 0 14px rgba(0,225,255,.15);width:280px}
+    .ch-count{font-size:.8rem;color:var(--c1);background:rgba(0,225,255,.08);
+      border:1px solid rgba(0,225,255,.2);border-radius:20px;padding:5px 13px;white-space:nowrap}
+
+    /* ── MAIN ── */
+    .wrap{padding:80px 3% 50px;max-width:1400px;margin:0 auto}
+
+    /* ── PLAYER ── */
+    .player-box{
+      position:relative;border-radius:var(--r1);padding:2px;margin-bottom:2rem;
+      background:linear-gradient(135deg,rgba(255,255,255,.11),rgba(0,0,0,0));
+      box-shadow:0 25px 55px rgba(0,0,0,.6),0 0 35px rgba(0,225,255,.07)
+    }
+    .player-inner{background:#000;border-radius:calc(var(--r1) - 2px);overflow:hidden;position:relative}
+
+    /* overlay shown on hover */
+    .p-overlay{
+      position:absolute;top:0;left:0;right:0;z-index:10;
+      padding:1.1rem 1.3rem;
+      background:linear-gradient(to bottom,rgba(0,0,0,.9) 0%,transparent 100%);
+      display:flex;align-items:center;gap:12px;
+      opacity:0;transition:.25s;pointer-events:none
+    }
+    .player-inner:hover .p-overlay{opacity:1;pointer-events:auto}
+    .live-pill{display:flex;align-items:center;gap:5px;
+      background:rgba(255,42,95,.15);border:1px solid var(--c3);color:var(--c3);
+      padding:3px 11px;border-radius:18px;font-size:.75rem;font-weight:700;flex-shrink:0}
+    .live-dot{width:6px;height:6px;border-radius:50%;background:var(--c3);animation:blink 1.3s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    .p-chname{flex:1;font-size:1.1rem;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.9);min-width:0;
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .p-btn{
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;
+      width:34px;height:34px;border-radius:9px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:.2s;flex-shrink:0
+    }
+    .p-btn:hover{background:var(--c1);color:#000;border-color:var(--c1)}
+
+    /* error overlay inside player */
+    .p-error{
+      display:none;position:absolute;inset:0;z-index:20;
+      background:rgba(0,0,0,.85);
+      flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px
+    }
+    .p-error.visible{display:flex}
+    .p-error i{font-size:3rem;color:var(--c3)}
+    .p-error p{color:#ccc;font-size:1rem}
+    .retry-btn{
+      background:var(--c1);color:#000;font-family:'Cairo',sans-serif;font-weight:700;
+      border:none;border-radius:25px;padding:9px 24px;cursor:pointer;font-size:.95rem;transition:.2s
+    }
+    .retry-btn:hover{transform:scale(1.04)}
+
+    video{width:100%;aspect-ratio:16/9;display:block;background:#000;cursor:pointer}
+    :fullscreen video, :-webkit-full-screen video, :-moz-full-screen video, :-ms-fullscreen video {
+      width: 100vw !important;
+      height: 100vh !important;
+      aspect-ratio: unset;
+    }
+    :fullscreen .player-inner, :-webkit-full-screen .player-inner { border-radius: 0; }
+
+    /* ── TABS ── */
+    .tabs{display:flex;gap:9px;overflow-x:auto;padding-bottom:10px;margin-bottom:18px;scrollbar-width:none}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{
+      background:var(--surf);border:1px solid var(--gb);color:var(--dim);
+      padding:8px 18px;border-radius:28px;font-family:'Cairo',sans-serif;font-size:.9rem;
+      font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;
+      display:flex;align-items:center;gap:6px;transition:.25s
+    }
+    .tab:hover{background:rgba(255,255,255,.05);color:#fff}
+    .tab.on{background:linear-gradient(135deg,var(--c2),var(--c1));color:#fff;border-color:transparent;
+      box-shadow:0 4px 14px rgba(0,225,255,.2)}
+
+    /* ── GRID ── */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:15px}
+    .card{
+      background:var(--surf);border:1px solid var(--gb);border-radius:var(--r2);
+      padding:18px 12px;cursor:pointer;text-align:center;
+      display:flex;flex-direction:column;align-items:center;gap:11px;
+      transition:.35s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden
+    }
+    .card::after{content:'';position:absolute;inset:0;
+      background:linear-gradient(to top,rgba(0,225,255,.08),transparent);
+      opacity:0;transition:.3s;pointer-events:none}
+    .card:hover{transform:translateY(-6px) scale(1.02);border-color:rgba(0,225,255,.3);
+      box-shadow:0 12px 25px rgba(0,0,0,.5),0 0 16px rgba(0,225,255,.1)}
+    .card:hover::after{opacity:1}
+    .card.on{border-color:var(--c1);background:rgba(0,225,255,.05)}
+    .c-icon{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.03);
+      display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--c1);transition:.3s}
+    .card:hover .c-icon,.card.on .c-icon{background:var(--c1);color:#000;box-shadow:0 0 16px var(--c1);transform:scale(1.08)}
+    .c-name{font-size:.95rem;font-weight:700;line-height:1.3;color:var(--text)}
+    .c-cat{font-size:.68rem;color:var(--dim);background:rgba(255,255,255,.05);
+      padding:2px 9px;border-radius:10px}
+    .empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--dim)}
+    .empty i{font-size:3rem;opacity:.2;display:block;margin-bottom:10px}
+
+    /* ── TOAST ── */
+    .toast{
+      position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);
+      background:rgba(8,8,8,.92);backdrop-filter:blur(14px);
+      border:1px solid var(--c1);border-radius:28px;
+      padding:9px 24px;display:flex;align-items:center;gap:9px;
+      font-weight:600;z-index:9999;opacity:0;
+      transition:.4s cubic-bezier(.68,-.55,.265,1.55);white-space:nowrap
+    }
+    .toast.show{transform:translate(-50%,0);opacity:1}
+
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--gb);background:rgba(0,0,0,.4);
+      margin-top:50px;padding:30px 20px;text-align:center}
+    .ft-brand{font-family:'Oswald',sans-serif;font-size:1.7rem;font-weight:700;
+      background:linear-gradient(90deg,var(--c1),var(--c2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+    @media(max-width:580px){
+      .brand-text h1{font-size:1.2rem}.brand-icon{width:36px;height:36px;font-size:17px}
+      .search-wrap input{width:150px}.search-wrap input:focus{width:180px}
+      .ch-count{display:none}
+      .grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:11px}
+      .card{padding:14px 9px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <a class="brand" href="#">
+    <div class="brand-icon"><i class="ph-fill ph-television"></i></div>
+    <div class="brand-text">
+      <h1>SEFIANE</h1>
+      <small>VIP STREAMING</small>
+    </div>
+  </a>
+  <div class="header-right">
+    <div class="search-wrap">
+      <i class="ph ph-magnifying-glass"></i>
+      <input id="srch" type="text" placeholder="ابحث عن قناة..." oninput="doSearch(this.value)">
+    </div>
+    <div class="ch-count" id="chCount">0 قناة</div>
+  </div>
+</header>
+
+<!-- ═══ MAIN ═══ -->
+<div class="wrap">
+
+  <!-- PLAYER -->
+  <div class="player-box">
+    <div class="player-inner" id="playerWrap">
+
+      <!-- top overlay -->
+      <div class="p-overlay">
+        <div class="live-pill"><span class="live-dot"></span> مباشر</div>
+        <div class="p-chname" id="chNow">اختر قناة للبدء</div>
+        <button class="p-btn" title="ملء الشاشة" onclick="goFullscreen()" id="fsBtn">
+          <i class="ph ph-corners-out"></i>
+        </button>
+      </div>
+
+      <!-- error state -->
+      <div class="p-error" id="pError">
+        <i class="ph ph-warning-circle"></i>
+        <p>تعذّر تشغيل هذه القناة<br><small style="color:var(--dim);font-size:.8rem">قد تكون غير متاحة حالياً أو تحتاج VPN</small></p>
+        <button class="retry-btn" onclick="retryPlay()">🔄 إعادة المحاولة</button>
+      </div>
+
+      <video id="vid" controls playsinline ondblclick="goFullscreen()"></video>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabBar">
+    <button class="tab on" data-cat="الكل"       onclick="setTab(this)"><i class="ph ph-squares-four"></i> الكل</button>
+    <button class="tab"    data-cat="رياضة"      onclick="setTab(this)"><i class="ph ph-soccer-ball"></i> رياضة</button>
+    <button class="tab"    data-cat="أخبار"      onclick="setTab(this)"><i class="ph ph-newspaper"></i> أخبار</button>
+    <button class="tab"    data-cat="جزائرية"    onclick="setTab(this)"><i class="ph ph-flag"></i> جزائرية</button>
+    <button class="tab"    data-cat="تونسية"     onclick="setTab(this)"><i class="ph ph-flag"></i> تونسية</button>
+    <button class="tab"    data-cat="مغربية"     onclick="setTab(this)"><i class="ph ph-flag"></i> مغربية</button>
+    <button class="tab"    data-cat="ترفيه"      onclick="setTab(this)"><i class="ph ph-popcorn"></i> ترفيه</button>
+    <button class="tab"    data-cat="أفلام"      onclick="setTab(this)"><i class="ph ph-film-strip"></i> أفلام</button>
+    <button class="tab"    data-cat="أطفال"      onclick="setTab(this)"><i class="ph ph-baby"></i> أطفال</button>
+    <button class="tab"    data-cat="موسيقى"     onclick="setTab(this)"><i class="ph ph-music-notes"></i> موسيقى</button>
+    <button class="tab"    data-cat="إسلامية"    onclick="setTab(this)"><i class="ph ph-mosque"></i> إسلامية</button>
+    <button class="tab"    data-cat="أجنبية"     onclick="setTab(this)"><i class="ph ph-globe-hemisphere-west"></i> أجنبية</button>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-brand">SEFIANE VIP</div>
+  <p style="color:var(--dim);margin-top:6px;font-size:.9rem">
+    <strong style="color:var(--c1)" id="totalTxt">0</strong> قناة مباشرة مجانية &mdash; بث 24/7
+  </p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <i class="ph-fill ph-play-circle" style="color:var(--c1);font-size:1.2rem"></i>
+  <span id="toastTxt"></span>
+</div>
+
+<script>
+// ─── Data ─────────────────────────────────────────────────────────────────
+const ALL = (typeof parsedChannels !== 'undefined' ? parsedChannels : [])
+  .map((c, i) => ({...c, _id: i}));
+
+document.getElementById('totalTxt').textContent = ALL.length;
+document.getElementById('chCount').textContent   = ALL.length + ' قناة';
+
+// ─── State ────────────────────────────────────────────────────────────────
+let activeCat  = 'الكل';
+let searchQ    = '';
+let activeId   = -1;
+let currentCh  = null;
+let hls        = null;
+const vid      = document.getElementById('vid');
+const grid     = document.getElementById('grid');
+const pError   = document.getElementById('pError');
+
+// ─── Filter + Render ──────────────────────────────────────────────────────
+function getList() {
+  return ALL.filter(c => {
+    const catOk = activeCat === 'الكل' || c.cat === activeCat;
+    const qOk   = !searchQ  || c.name.toLowerCase().includes(searchQ.toLowerCase());
+    return catOk && qOk;
+  });
+}
+
+function render() {
+  const list = getList();
+  grid.innerHTML = '';
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty"><i class="ph ph-binoculars"></i>لا توجد قنوات في هذا القسم</div>';
+    return;
+  }
+  list.forEach(ch => {
+    const d = document.createElement('div');
+    d.className = 'card' + (ch._id === activeId ? ' on' : '');
+    d.id = 'card' + ch._id;
+    d.innerHTML = `
+      <div class="c-icon"><i class="ph ${ch.icon}"></i></div>
+      <div class="c-name">${ch.name}</div>
+      <div class="c-cat">${ch.cat}</div>`;
+    d.onclick = () => { play(ch); scrollToTop(); };
+    grid.appendChild(d);
+  });
+}
+
+// ─── Play ─────────────────────────────────────────────────────────────────
+function play(ch) {
+  // update card UI
+  document.querySelectorAll('.card.on').forEach(el => el.classList.remove('on'));
+  const card = document.getElementById('card' + ch._id);
+  if (card) card.classList.add('on');
+  activeId   = ch._id;
+  currentCh  = ch;
+  pError.classList.remove('visible');
+  document.getElementById('chNow').textContent = ch.name;
+  showToast('▶  ' + ch.name);
+
+  // destroy previous hls
+  if (hls) { hls.destroy(); hls = null; }
+  vid.src = '';
+
+  const url = ch.url;
+
+  if (Hls.isSupported()) {
+    hls = new Hls({
+      maxBufferLength:       30,
+      maxMaxBufferLength:    60,
+      manifestLoadingTimeOut: 12000,
+      levelLoadingTimeOut:    12000
+    });
+    hls.loadSource(url);
+    hls.attachMedia(vid);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => vid.play().catch(() => {}));
+    hls.on(Hls.Events.ERROR, (_, data) => {
+      if (data.fatal) {
+        pError.classList.add('visible');
+        hls.destroy(); hls = null;
+      }
+    });
+  } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
+    // Safari native HLS
+    vid.src = url;
+    vid.load();
+    vid.play().catch(() => {});
+  } else {
+    pError.classList.add('visible');
+  }
+}
+
+function retryPlay() {
+  if (currentCh) play(currentCh);
+}
+
+// ─── Fullscreen (true OS-level fullscreen) ────────────────────────────────
+function goFullscreen() {
+  const el = document.getElementById('playerWrap');
+  // Try element fullscreen first (fills whole OS screen)
+  const req = el.requestFullscreen
+             || el.webkitRequestFullscreen
+             || el.mozRequestFullScreen
+             || el.msRequestFullscreen;
+  if (req) {
+    req.call(el).catch(() => {
+      // fallback: fullscreen the video element itself
+      const vr = vid.requestFullscreen
+               || vid.webkitRequestFullscreen
+               || vid.mozRequestFullScreen
+               || vid.msRequestFullscreen;
+      if (vr) vr.call(vid);
+    });
+  }
+}
+
+// Update icon on fullscreen change
+document.addEventListener('fullscreenchange', () => {
+  const btn = document.getElementById('fsBtn');
+  if (document.fullscreenElement) {
+    btn.innerHTML = '<i class="ph ph-corners-in"></i>';
+    btn.title = 'خروج من الشاشة الكاملة';
+  } else {
+    btn.innerHTML = '<i class="ph ph-corners-out"></i>';
+    btn.title = 'ملء الشاشة';
+  }
+});
+document.addEventListener('webkitfullscreenchange', () => {
+  const btn = document.getElementById('fsBtn');
+  if (document.webkitFullscreenElement) {
+    btn.innerHTML = '<i class="ph ph-corners-in"></i>';
+  } else {
+    btn.innerHTML = '<i class="ph ph-corners-out"></i>';
+  }
+});
+
+// ─── Tab + Search ─────────────────────────────────────────────────────────
+function setTab(btn) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  activeCat = btn.dataset.cat;
+  searchQ = '';
+  document.getElementById('srch').value = '';
+  render();
+}
+
+function doSearch(q) {
+  searchQ = q.trim();
+  if (searchQ) {
+    activeCat = 'الكل';
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+    document.querySelector('.tab').classList.add('on');
+  }
+  render();
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastTxt').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+// ─── Init ─────────────────────────────────────────────────────────────────
+render();
+if (ALL.length) play(ALL[0]);
+</script>
+</body>
+</html>
