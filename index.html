@@ -47,8 +47,19 @@
       animation:glow 2.5s ease-in-out infinite alternate
     }
     @keyframes glow{to{box-shadow:0 0 32px rgba(189,0,255,.5)}}
-    .brand-text h1{font-family:'Oswald',sans-serif;font-size:1.55rem;font-weight:700;line-height:1;
-      background:linear-gradient(90deg,#fff 30%,var(--c1));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    @keyframes rgbText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    .brand-text h1{
+      font-family:'Oswald',sans-serif;font-size:1.7rem;font-weight:800;line-height:1;letter-spacing:1px;
+      background: linear-gradient(to right, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rgbText 3s linear infinite;
+      text-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
     .brand-text small{font-size:.65rem;color:var(--c3);font-weight:800;letter-spacing:2.5px}
 
     .header-right{display:flex;align-items:center;gap:10px;margin-right:auto}
